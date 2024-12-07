@@ -1,0 +1,24 @@
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import MedicalR
+from .forms import MedicalRecordForm
+
+def add_medical_record(request):
+    if request.method == 'POST':
+        form = MedicalRecordForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('userapp:appointment_success')  # Redirect to the record list page
+    else:
+        form = MedicalRecordForm()
+    return render(request, 'userapp/add_medical_record.html', {'form': form})
+
+from django.shortcuts import render
+from .models import MedicalR
+def view_medical_records(request):
+    records = MedicalR.objects.all()
+    context = {
+        'records':records
+    }
+    return render(request, 'userapp/view_medical_records.html', context)
